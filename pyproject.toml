@@ -1,0 +1,70 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "weryfikacja-faktow"
+version = "1.0.0"
+description = "Agent AI weryfikujący fakty dla fikcyjnej redakcji „Kurier Faktów” — z izolowanym, odpornym na prompt injection przeglądaniem sieci."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.12"
+authors = [{ name = "KFukas" }]
+dependencies = [
+  "fastapi>=0.115",
+  "uvicorn[standard]>=0.30",
+  "sqlalchemy>=2.0",
+  "alembic>=1.13",
+  "pydantic>=2.7",
+  "pydantic-settings>=2.3",
+  "httpx>=0.27,<1",
+  "lxml>=5.2",
+  "lxml_html_clean>=0.4",
+  "trafilatura>=1.12",
+  "pypdf>=4.0",
+  "pyyaml>=6.0",
+  "mcp>=2.3,<3",
+  "anthropic>=1.15,<2",
+  "sse-starlette>=2.1",
+]
+
+[project.optional-dependencies]
+postgres = ["psycopg[binary]>=3.1"]
+dev = [
+  "pytest>=8.2",
+  "pytest-asyncio>=0.23",
+  "ruff>=0.5",
+]
+
+[tool.setuptools.packages.find]
+include = ["backend*", "mcp_servers*", "orchestrator*", "redteam*"]
+
+[tool.setuptools.package-data]
+"mcp_servers.web_sandbox" = ["fixtures/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+addopts = "-q"
+markers = [
+  "network: test wymaga dostępu do internetu (domyślnie pomijany)",
+  "llm: test wymaga prawdziwego modelu (ANTHROPIC_API_KEY)",
+]
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+extend-exclude = ["frontend", "alembic/versions"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S"]
+ignore = [
+  "S101",  # assert w testach
+  "S311",  # random nie do kryptografii
+  "B008",  # FastAPI Depends w argumentach domyślnych
+  "E501",  # długość linii pilnuje formatter
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S", "B"]
+"redteam/**" = ["S104", "S108"]

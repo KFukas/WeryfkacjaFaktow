@@ -1,0 +1,43 @@
+# Sekrety — NIGDY do repo
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+build/
+dist/
+
+# Bazy lokalne
+*.db
+*.sqlite
+*.sqlite3
+data/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/coverage/
+
+# Red-team — logi serwera i surowe wyniki (raporty RAPORT_*.md trafiają do repo)
+redteam/logs/
+redteam/reports/*.json
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Claude Code — lokalne ustawienia użytkownika
+.claude/settings.local.json

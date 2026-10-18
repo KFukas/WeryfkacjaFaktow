@@ -1,0 +1,1 @@
+"""Pakiet projektu „Weryfikacja faktów”."""
