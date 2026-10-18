@@ -101,6 +101,7 @@ python scripts/ui_e2e.py --screenshots docs/img     # przy uruchomionym API i pa
 ## Rozwiązywanie problemów
 | Objaw | Przyczyna / rozwiązanie |
 |---|---|
+| `localhost:8080` — `ERR_CONNECTION_REFUSED` | port 8080 to panel z **Dockera** (`docker compose up --build`). Bez Dockera: panel deweloperski `.\scripts\start.ps1` → <http://127.0.0.1:5173> albo build produkcyjny `.\scripts\serve-build.ps1` → <http://localhost:8080> (API na :8000 musi działać) |
 | `py -3.12` nie działa | zainstaluj Python 3.12 (python.org) albo ustaw `PYTHON=python3.12` dla `setup.sh` |
 | Panel: „Nie można połączyć się z API” | API nie działa na :8000; uruchom `uvicorn backend.main:app --port 8000`; w dev Vite przekazuje `/api` na 127.0.0.1:8000 (`VITE_API_PROXY`) |
 | Przebieg kończy się `failed: LLM_PROVIDER=anthropic wymaga ANTHROPIC_API_KEY` | uzupełnij klucz w `.env` albo ustaw `LLM_PROVIDER=mock` |
