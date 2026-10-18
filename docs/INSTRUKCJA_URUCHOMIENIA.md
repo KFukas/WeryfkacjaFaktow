@@ -110,4 +110,6 @@ python scripts/ui_e2e.py --screenshots docs/img     # przy uruchomionym API i pa
 | `/mcp` w Claude Code: serwer „failed” | brak `.venv` (uruchom setup) albo `python` spoza `PATH`; test: `python scripts/run_mcp.py web-sandbox` (powinien czekać na stdin) |
 | Znaki `�` w konsoli Windows | `set PYTHONIOENCODING=utf-8` (skrypty projektu ustawiają UTF-8 same) |
 | Docker: `env_file` z `required: false` nie działa | zaktualizuj Docker Compose do v2.24+ albo utwórz pusty `.env` |
+| `pip install` na Windows: `OSError: [Errno 2] No such file or directory: …\anthropic\types\beta\…` | limit 260 znaków ścieżki — sklonuj repozytorium do krótkiej ścieżki (np. `C:\Projekty\WeryfkacjaFaktow`) albo włącz długie ścieżki (`LongPathsEnabled` w rejestrze / zasadach grupy) |
+| `setup.ps1`: błędy parsera z „krzaczkami” | używasz zmodyfikowanego skryptu z polskimi znakami bez BOM — skrypty `.ps1` w repo są celowo w ASCII (Windows PowerShell 5.1 czyta je jako ANSI) |
 | SQLite „database is locked” | zatrzymaj inne procesy używające `data/kurier.db`; WAL jest włączony, timeout 30 s |

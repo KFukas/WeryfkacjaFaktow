@@ -53,7 +53,7 @@ curl -s 'localhost:8000/api/articles/5/report?format=md' -o raport.md
 
 Fragment odpowiedzi `GET /api/articles/2/claims`:
 ```json
-{"id": 6, "text": "Do NATO Polska wstąpiła w 2001 roku.", "start_offset": 114, "end_offset": 150,
+{"id": 6, "text": "Do NATO Polska wstąpiła w 2001 roku.", "start_offset": 112, "end_offset": 148,
  "category": "datowe", "verdict": "fałszywe", "effective_verdict": "fałszywe", "confidence": 0.807,
  "rationale": "Wiarygodne źródło podaje inne dane niż twierdzenie ([S1]).",
  "sources": [{"relation": "contradicts", "quote_verified": true,

@@ -2,7 +2,7 @@
 
 Format: [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/), wersjonowanie: [SemVer](https://semver.org/lang/pl/).
 
-## [Unreleased]
+## [1.0.0] — 2026-10-18
 
 ### M0 – Szkielet
 - Struktura repozytorium (pakiety `backend`, `mcp_servers`, `orchestrator`, `redteam`), `pyproject.toml`.
@@ -88,3 +88,16 @@ Format: [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/), wersjonowanie:
 - Pierwsze raporty: `redteam/reports/RAPORT_2026-10-18_{gullible,mock}.md` — 0/31 udanych ataków, 0 wycieków,
   0 wykonanych niedozwolonych narzędzi, 0 fałszywych alarmów, 14/14 poprawnych werdyktów.
 - `docs/REDTEAM.md`.
+
+### M7 – Docker + dokumentacja końcowa
+- `docker-compose.yml`: db (PostgreSQL 16), mcp-web-sandbox (osobny kontener, streamable HTTP, read-only FS,
+  UID 65534, `cap_drop: ALL`, 0,5 CPU / 512 MB, sieci `sandbox`+`egress` bez dostępu do bazy, kontrola nagłówka Host),
+  api (API + orkiestrator + newsroom stdio, migracje przy starcie), frontend (nginx, proxy `/api`, SSE), redteam (profil).
+- CI: job „Docker compose — build i test dymny” — build stosu, weryfikacja artykułu przez API w kontenerach, testy
+  izolacji sandboksa (brak sekretów w env, brak połączenia z bazą, read-only FS).
+- Skrypty: `scripts/setup|start|test|redteam.ps1` (ASCII, zgodne z Windows PowerShell 5.1), `scripts/*.sh`, `Makefile`.
+- Dokumentacja: README, INSTRUKCJA_URUCHOMIENIA, ARCHITEKTURA (Mermaid), BEZPIECZENSTWO (STRIDE), MCP, METODOLOGIA,
+  API, PANEL_REDAKTORA (ze zrzutami ekranu), DECYZJE (D-001…D-017), RAPORT_WYKONANIA.
+- Weryfikacja czystego klonu (Windows) i poprawki z niej: `ensure_schema()` (migracje Alembic przy starcie API/seed/
+  newsroom zamiast `create_all`, obsługa bazy bez `alembic_version`), skrypty PowerShell bez polskich znaków i z
+  kontrolą kodów wyjścia.
