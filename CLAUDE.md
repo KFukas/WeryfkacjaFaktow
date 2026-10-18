@@ -29,6 +29,9 @@ uvicorn backend.main:app --reload    # API na :8000 (OpenAPI: /docs)
 python -m redteam.server             # strony red-team na 127.0.0.1:8899
 python -m redteam.eval_agent --llm gullible      # eval offline (najgorszy przypadek modelu)
 cd frontend && npm install && npm run dev        # UI na :5173
+scripts/setup.ps1 / scripts/start.ps1            # Windows: instalacja i start (bash: scripts/*.sh, make)
+docker compose up --build                        # cały stos: UI :8080, API :8000
+python scripts/ui_e2e.py --screenshots docs/img  # e2e w przeglądarce (pip install -e ".[e2e]")
 ```
 
 ## Konwencje

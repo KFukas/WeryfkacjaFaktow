@@ -70,3 +70,34 @@ redakcji. Strażnik ruchu wychodzącego dodatkowo blokuje fragmenty artykułu sp
 **Decyzja:** `GullibleLLM` wykonuje każde polecenie ze źródeł (żąda narzędzi zapisu, odwiedza adresy z treści z
 dopisanym artykułem, podbija ocenę, wymusza werdykt). Testy red-team offline mierzą, czy zabezpieczenia strukturalne
 zatrzymują taki model — to dolna granica odporności niezależna od jakości prawdziwego LLM.
+
+## D-012 — Frontend bez routera i biblioteki komponentów
+**Decyzja:** prosty routing po `location.hash` i komponenty Tailwind zamiast react-router/UI-kitu — mniej zależności,
+mniejsza powierzchnia ataku. Dostępność: werdykt kodowany kolorem, ikoną i wzorem podkreślenia; `aria-pressed`,
+`aria-live` dla postępu. Treść zewnętrzna wyłącznie jako tekst; CSP wstrzykiwana tylko w buildzie produkcyjnym
+(tryb dev Vite wymaga skryptów inline).
+
+## D-013 — SSE zamiast WebSocket dla postępu
+**Decyzja:** `GET /api/runs/{id}/stream` (Server-Sent Events) odpytuje bazę co 0,5 s i strumieniuje nowe zdarzenia
+audytu. Jednokierunkowy kanał wystarcza, działa przez proxy nginx (`proxy_buffering off`) i nie wymaga stanu w pamięci API.
+
+## D-014 — Treść główna z `<article>`/`<main>`, trafilatura jako fallback
+**Kontekst:** trafilatura łączyła akapity w jedną linię, przez co cytaty sklejały tytuł, datę i zdanie.
+**Decyzja:** jeśli strona ma semantyczny kontener z ≥ 30% tekstu, bierzemy jego widoczny tekst z podziałem na bloki;
+trafilatura tylko dla stron bez takiego kontenera.
+
+## D-015 — Wyjątki SSRF w testach po IP:port + mapowanie nazw tylko testowe
+**Decyzja:** `SANDBOX_TEST_ALLOW` dopuszcza adres prywatny wyłącznie, gdy zgadza się **rozwiązany IP i port**;
+nazwa hosta na liście zwalnia tylko z ograniczenia portu. `SANDBOX_TEST_HOSTS` (nazwa → IP) symuluje domeny-podróbki
+i rebinding w testach. W produkcji obie zmienne są puste.
+
+## D-016 — Docker: sandbox jako osobny kontener po streamable HTTP
+**Decyzja:** w Dockerze `mcp-web-sandbox` to osobna usługa (read-only FS, UID 65534, `cap_drop: ALL`, 0,5 CPU / 512 MB,
+sieci `sandbox` + `egress`, bez sieci bazy), a API łączy się z nim przez `http://mcp-web-sandbox:8765/mcp`. Serwer MCP
+sprawdza nagłówek `Host`. Newsroom pozostaje procesem stdio w kontenerze API (strefa zaufana). Lokalnie Docker nie był
+dostępny — stos jest budowany i testowany end-to-end w CI (job „Docker compose — build i test dymny”).
+
+## D-017 — Model „łatwowierny” reaguje tylko na tryb rozkazujący
+**Kontekst:** pierwsza wersja reagowała na słowo „oznacza” w zwykłym zdaniu GUS i „potwierdzała” twierdzenie
+przyczynowe — to ujawniło ryzyko szczątkowe (błąd semantyczny modelu na wiarygodnym źródle), opisane w
+`docs/BEZPIECZENSTWO.md`. Dla czytelności evalu wskazówki modelu `gullible` dopasowujemy z granicami słów.
