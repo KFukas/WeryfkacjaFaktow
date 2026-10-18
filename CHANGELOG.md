@@ -51,3 +51,12 @@ Format: [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/), wersjonowanie:
   idempotencja (klucz / trwający przebieg), CLI `python -m orchestrator.runner`.
 - Skill `.claude/skills/weryfikacja-faktow/SKILL.md` jako źródło promptów (szkielet; uzupełniany w M4).
 - Testy: werdykty 14 twierdzeń z seedów, audyt, ponowna weryfikacja, budżet, allowlisty, API + SSE, transport stdio.
+
+### M4 – Skill Claude Code
+- Skill `weryfikacja-faktow`: procedura krok po kroku, zasady bezpieczeństwa, sekcje promptów etapów (wczytywane
+  przez orkiestrator), `references/` (rubryka, katalog źródeł publicznych, przykłady z próbą injection),
+  `scripts/validate_verdicts.py`.
+- `.mcp.json` (oba serwery przez launcher `scripts/run_mcp.py`, ścieżki względne, sandbox tylko ze zmiennymi `SANDBOX_*`).
+- `.claude/settings.json`: allowlista testów/lint, odczyt MCP bez pytania, zapis do newsroom z potwierdzeniem,
+  blokada `.env` i `WebFetch`.
+- `docs/SKILL.md`; testy frontmattera, konfiguracji, startu serwerów jak w Claude Code i walidatora.

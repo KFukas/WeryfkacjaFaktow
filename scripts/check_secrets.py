@@ -29,6 +29,8 @@ def _git(*args: str) -> str:
 
 
 def main() -> int:
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")  # konsola Windows (cp1250)
     check_all = "--all" in sys.argv
     problems: list[str] = []
     if check_all:

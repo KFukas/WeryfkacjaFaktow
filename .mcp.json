@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "web-sandbox": {
+      "type": "stdio",
+      "command": "python",
+      "args": ["scripts/run_mcp.py", "web-sandbox"],
+      "env": {
+        "SANDBOX_OFFLINE": "${SANDBOX_OFFLINE:-1}",
+        "SANDBOX_TIMEOUT_S": "${SANDBOX_TIMEOUT_S:-10}",
+        "SANDBOX_MAX_TEXT_CHARS": "${SANDBOX_MAX_TEXT_CHARS:-20000}"
+      }
+    },
+    "newsroom": {
+      "type": "stdio",
+      "command": "python",
+      "args": ["scripts/run_mcp.py", "newsroom"],
+      "env": {}
+    }
+  }
+}

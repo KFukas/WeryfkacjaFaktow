@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "enabledMcpjsonServers": ["web-sandbox", "newsroom"],
+  "permissions": {
+    "allow": [
+      "Bash(pytest:*)",
+      "Bash(python -m pytest:*)",
+      "Bash(.venv/Scripts/pytest:*)",
+      "Bash(.venv/bin/pytest:*)",
+      "Bash(ruff check:*)",
+      "Bash(.venv/Scripts/ruff check:*)",
+      "Bash(.venv/bin/ruff check:*)",
+      "Bash(python scripts/check_secrets.py:*)",
+      "Bash(python .claude/skills/weryfikacja-faktow/scripts/validate_verdicts.py:*)",
+      "Bash(python -m redteam.eval_agent --llm mock:*)",
+      "Bash(python -m redteam.eval_agent --llm gullible:*)",
+      "Bash(npm run typecheck:*)",
+      "Bash(npm run test:*)",
+      "Bash(npm test:*)",
+      "Bash(npm run build:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "mcp__web-sandbox__search_public_sources",
+      "mcp__web-sandbox__query_dataset",
+      "mcp__web-sandbox__fetch_url_sanitized",
+      "mcp__web-sandbox__score_source",
+      "mcp__newsroom__get_article",
+      "mcp__newsroom__list_pending_articles"
+    ],
+    "ask": [
+      "mcp__newsroom__save_claims",
+      "mcp__newsroom__attach_source",
+      "mcp__newsroom__save_verdict",
+      "Bash(git push:*)",
+      "Bash(python -m redteam.eval_agent --llm anthropic:*)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Edit(./.env)",
+      "Bash(cat .env:*)",
+      "Bash(type .env:*)",
+      "WebFetch"
+    ]
+  }
+}
