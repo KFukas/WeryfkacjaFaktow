@@ -16,7 +16,7 @@ from typing import Any
 
 from backend import services
 from backend.config import get_settings
-from backend.db import Base, get_engine, session_scope
+from backend.db import ensure_schema, session_scope
 from orchestrator.llm.base import get_llm
 from orchestrator.pipeline import PipelineConfig, run
 
@@ -78,7 +78,7 @@ def main() -> int:
     p.add_argument("--claim", type=int, default=None)
     p.add_argument("--llm", choices=sorted(ALLOWED_PROVIDERS), default=None)
     args = p.parse_args()
-    Base.metadata.create_all(get_engine())
+    ensure_schema()
     run_id, _ = create_run(args.article, args.claim, provider=args.llm)
     summary = asyncio.run(execute(run_id, args.article, args.claim, provider=args.llm))
     print(json.dumps(summary, ensure_ascii=False, indent=2))

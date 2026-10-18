@@ -164,3 +164,20 @@ def test_migrations_match_models(tmp_path):
     assert {"articles", "claims", "sources", "claim_sources", "agent_runs", "agent_events",
             "editor_decisions"} <= tables
     command.check(cfg)  # rzuca, jeśli modele i migracje się rozjechały
+
+
+def test_ensure_schema_handles_fresh_and_legacy_databases(tmp_path):
+    """Nowa baza → migracje; baza po create_all (bez alembic_version) → stamp zamiast błędu „table exists”."""
+    from sqlalchemy import inspect, text
+
+    from backend.db import Base, configure, ensure_schema
+
+    fresh = configure(f"sqlite:///{(tmp_path / 'fresh.db').as_posix()}")
+    ensure_schema()
+    assert "alembic_version" in inspect(fresh).get_table_names()
+    legacy = configure(f"sqlite:///{(tmp_path / 'legacy.db').as_posix()}")
+    Base.metadata.create_all(legacy)
+    ensure_schema()
+    ensure_schema()  # idempotentne
+    with legacy.connect() as conn:
+        assert conn.execute(text("select version_num from alembic_version")).scalar() == "0001"

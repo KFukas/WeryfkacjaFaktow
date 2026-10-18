@@ -14,7 +14,7 @@ from mcp.server.mcpserver import MCPServer
 from pydantic import ValidationError
 
 from backend import schemas, services
-from backend.db import Base, get_engine, session_scope
+from backend.db import ensure_schema, session_scope
 
 server = MCPServer(
     name="newsroom",
@@ -105,7 +105,7 @@ def log_agent_event(run_id: str, event: dict[str, Any]) -> dict[str, Any]:
 
 
 def main() -> None:
-    Base.metadata.create_all(get_engine())
+    ensure_schema()
     server.run("stdio")
 
 

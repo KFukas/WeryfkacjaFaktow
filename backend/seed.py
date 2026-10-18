@@ -11,7 +11,7 @@ import sys
 
 from sqlalchemy import select
 
-from backend.db import Base, get_engine, session_scope
+from backend.db import ensure_schema, session_scope
 from backend.models import Article
 
 ARTICLES: list[dict[str, str]] = [
@@ -98,7 +98,7 @@ EXPECTED_VERDICTS: dict[str, str] = {
 }
 
 def seed(reset: bool = False) -> int:
-    Base.metadata.create_all(get_engine())
+    ensure_schema()
     created = 0
     with session_scope() as db:
         if reset:

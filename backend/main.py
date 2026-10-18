@@ -10,16 +10,14 @@ from fastapi.responses import JSONResponse
 
 from backend import services
 from backend.config import get_settings
-from backend.db import Base, get_engine
+from backend.db import ensure_schema
 from backend.routers import articles, claims, runs
 
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
-    settings = get_settings()
-    if settings.is_sqlite:
-        # Dev: brak migracji nie blokuje startu. Produkcyjnie (PostgreSQL) — `alembic upgrade head`.
-        Base.metadata.create_all(get_engine())
+    # Migracje przy starcie (idempotentne) — działa tak samo dla SQLite i PostgreSQL.
+    ensure_schema()
     yield
 
 

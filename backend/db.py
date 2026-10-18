@@ -47,6 +47,30 @@ def configure(database_url: str | None = None) -> Engine:
     return _engine
 
 
+def ensure_schema() -> None:
+    """Doprowadza schemat do najnowszej migracji Alembic (zamiast create_all, żeby nie rozjechać wersjonowania).
+
+    Baza utworzona wcześniej przez `create_all` (bez tabeli alembic_version) jest oznaczana jako aktualna (stamp).
+    Config bez pliku .ini — env.py nie nadpisuje wtedy konfiguracji logowania aplikacji (uvicorn).
+    """
+    from alembic.config import Config
+    from sqlalchemy import inspect
+
+    from alembic import command
+    from backend.config import ROOT_DIR
+
+    engine = get_engine()
+    cfg = Config()
+    cfg.set_main_option("script_location", str(ROOT_DIR / "alembic"))
+    # configparser interpoluje „%” — URL-e SQLite na Windowsie zawierają np. „C%3A”
+    cfg.set_main_option("sqlalchemy.url", engine.url.render_as_string(hide_password=False).replace("%", "%%"))
+    tables = set(inspect(engine).get_table_names())
+    if "articles" in tables and "alembic_version" not in tables:
+        command.stamp(cfg, "head")
+    else:
+        command.upgrade(cfg, "head")
+
+
 def get_engine() -> Engine:
     if _engine is None:
         configure()
