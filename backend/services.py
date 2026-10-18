@@ -249,9 +249,39 @@ def log_agent_event(db: Session, run_id: str, event: schemas.AgentEventIn) -> Ag
     run.cost_usd = round(run.cost_usd + event.cost_usd, 6)
     if event.type == "tool_call":
         run.tool_calls += 1
+    if event.type == "progress":
+        run.progress = dict(event.payload)
+        if run.status == "queued":
+            run.status = "running"
+    if event.type == "run_finished":
+        run.status = str(event.payload.get("status", "completed"))
+        run.error = str(event.payload.get("error", ""))[:4000]
+        run.finished_at = utcnow()
     db.commit()
     db.refresh(ev)
     return ev
+
+
+def create_run(db: Session, article_id: int, claim_id: int | None, provider: str, model: str,
+               idempotency_key: str | None = None) -> tuple[AgentRun, bool]:
+    """Tworzy przebieg albo zwraca istniejący (ten sam klucz idempotencji lub trwający przebieg). → (run, created)"""
+    get_article(db, article_id)
+    if idempotency_key:
+        existing = db.scalars(select(AgentRun).where(AgentRun.idempotency_key == idempotency_key)).first()
+        if existing is not None:
+            return existing, False
+    active = db.scalars(select(AgentRun).where(AgentRun.article_id == article_id,
+                                              AgentRun.claim_id.is_(claim_id) if claim_id is None
+                                              else AgentRun.claim_id == claim_id,
+                                              AgentRun.status.in_(["queued", "running"]))).first()
+    if active is not None:
+        return active, False
+    run = AgentRun(article_id=article_id, claim_id=claim_id, llm_provider=provider, model=model,
+                   idempotency_key=idempotency_key, progress={"stage": "queued"})
+    db.add(run)
+    db.commit()
+    db.refresh(run)
+    return run, True
 
 
 # --- Raport -------------------------------------------------------------

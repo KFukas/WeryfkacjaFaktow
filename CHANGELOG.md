@@ -34,3 +34,20 @@ Format: [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/), wersjonowanie:
 - Testy: SSRF (20 wektorów), DNS rebinding, przekierowania, bomby rozmiaru, izolacja (brak importów strefy zaufanej,
   launcher bez sekretów), serwer MCP przez stdio; opcjonalne testy z prawdziwymi API (`RUN_NETWORK=1`).
 - Strojenie fałszywych alarmów na prawdziwych stronach (Wikipedia, gov.pl, stat.gov.pl): 0 flag na stronach łagodnych.
+
+### M3 – mcp-newsroom + orkiestrator
+- Serwer MCP `newsroom` (strefa zaufana): `get_article`, `list_pending_articles`, `save_claims`, `attach_source`,
+  `save_verdict`, `log_agent_event` — walidacja wspólna z REST (`backend/services.py`).
+- Orkiestrator: ekstrakcja → plan → research → kwarantanna (dual-LLM) → ocena źródeł → werdykt → zapis.
+- Bramka narzędzi: allowlisty per etap i per aktor (model dostaje wyłącznie narzędzia odczytu sandboksa w etapie
+  research; zapis wykonuje kod), zasada pochodzenia URL-i, strażnik ruchu wychodzącego (kanarki, fragmenty artykułu,
+  base64/hex), limity źródeł/pobrań, budżet wywołań i kosztu, pełny audyt (`AgentEvent`).
+- Koperty `<untrusted_source>` z escapowaniem; cytaty weryfikowane jako dosłowne fragmenty źródła.
+- Reguły werdyktu deterministyczne (`orchestrator/verdict_rules.py`) — przy niezgodności z modelem „wątpliwe”;
+  korekta LLM ±15 (bez podwyżek dla źródeł z flagami), korroboracja niezależnych źródeł.
+- Modele: `anthropic` (Claude, structured outputs, strict tool use, prompt caching, fallback przy odmowie),
+  `mock` (deterministyczny offline), `gullible` (najgorszy przypadek do testów red-team).
+- API: `POST /api/articles/{id}/verify`, `POST /api/claims/{id}/reverify`, SSE `GET /api/runs/{id}/stream`;
+  idempotencja (klucz / trwający przebieg), CLI `python -m orchestrator.runner`.
+- Skill `.claude/skills/weryfikacja-faktow/SKILL.md` jako źródło promptów (szkielet; uzupełniany w M4).
+- Testy: werdykty 14 twierdzeń z seedów, audyt, ponowna weryfikacja, budżet, allowlisty, API + SSE, transport stdio.

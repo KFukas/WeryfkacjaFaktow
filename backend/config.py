@@ -33,6 +33,7 @@ class Settings(BaseSettings):
     # Sandbox
     web_sandbox_transport: str = "stdio"  # stdio | http | inproc (testy)
     web_sandbox_url: str = "http://mcp-web-sandbox:8765/mcp"
+    newsroom_transport: str = "stdio"  # stdio | inproc (testy)
     sandbox_offline: str = "1"
     sandbox_test_allow: str = ""
 

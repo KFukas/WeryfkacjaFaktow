@@ -50,3 +50,23 @@ porównanie ukryte↔widoczne tylko dla ukrytej prozy i liczb znaczących; próg
 **Kontekst:** specyfikacja wskazuje `claude-sonnet-5-5` jako domyślny i `claude-opus-5-5` jako opcję.
 **Decyzja:** `ANTHROPIC_MODEL=claude-sonnet-5-5` w `.env.example`; serwerowy fallback przy odmowie
 (`fallbacks: "default"`, beta `server-side-fallback-2026-07-01`) włączony domyślnie, wyłączany `ANTHROPIC_FALLBACKS=off`.
+
+## D-008 — Pipeline sterowany kodem; pętla narzędzi modelu tylko w etapie research
+**Kontekst:** agent z pełnym dostępem do narzędzi zapisu mógłby zostać nakłoniony przez treść strony do zapisu werdyktu.
+**Decyzja:** etapy są sekwencją sterowaną kodem; model w etapie research ma wyłącznie trzy narzędzia odczytu strefy
+nieufnej, pozostałe etapy działają bez narzędzi (structured outputs). Zapis do bazy robi kod po walidacji regułami.
+**Konsekwencje:** mniejsza „autonomia” agenta, ale granica bezpieczeństwa nie zależy od posłuszeństwa modelu.
+
+## D-009 — Kwarantanna (dual-LLM) i weryfikacja cytatów
+**Decyzja:** każde pobrane źródło trafia do osobnego wywołania modelu bez narzędzi (może to być tańszy model —
+`ANTHROPIC_QUARANTINE_MODEL`), które zwraca JSON wg schematu. Model główny widzi tylko ten JSON + flagi + ocenę.
+Cytaty, które nie są dosłownym fragmentem tekstu źródła, są odrzucane; relacja supports/contradicts bez cytatu → context.
+
+## D-010 — Minimalizacja danych w etapie research
+**Decyzja:** model w etapie research widzi wyłącznie badane twierdzenie i plan — nie widzi treści artykułu ani notatek
+redakcji. Strażnik ruchu wychodzącego dodatkowo blokuje fragmenty artykułu spoza twierdzenia i tokeny-kanarki.
+
+## D-011 — Model „łatwowierny” w testach
+**Decyzja:** `GullibleLLM` wykonuje każde polecenie ze źródeł (żąda narzędzi zapisu, odwiedza adresy z treści z
+dopisanym artykułem, podbija ocenę, wymusza werdykt). Testy red-team offline mierzą, czy zabezpieczenia strukturalne
+zatrzymują taki model — to dolna granica odporności niezależna od jakości prawdziwego LLM.
