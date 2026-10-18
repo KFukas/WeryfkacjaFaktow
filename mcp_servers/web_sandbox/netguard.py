@@ -85,7 +85,9 @@ class Guard:
             raise SSRFBlocked(f"adres metadanych chmury {ip} jest zablokowany")
         if ip_is_public(ip):
             return
-        if self._test_allowed(host, port) or self._test_allowed(str(ip), port):
+        # Wyjątek testowy działa po ADRESIE IP:port — nazwa hosta z allowlisty, rozwiązana na inny adres
+        # prywatny, nadal jest blokowana.
+        if self._test_allowed(str(ip), port):
             return
         raise SSRFBlocked(f"adres {ip} (host {host}) nie jest publiczny")
 
@@ -118,7 +120,8 @@ class Guard:
 
     def resolve_checked(self, host: str, port: int) -> str:
         try:
-            ips = self.resolver(host, port)
+            override = self.settings.test_hosts.get(host.lower())
+            ips = [override] if override else self.resolver(host, port)
         except OSError as exc:
             raise FetchError("dns_error", f"nie można rozwiązać nazwy {host}") from exc
         if not ips:

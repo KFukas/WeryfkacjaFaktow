@@ -8,6 +8,7 @@ from sqlalchemy import select
 
 from backend import services
 from backend.models import AgentEvent, Article
+from backend.seed import EXPECTED_VERDICTS
 from orchestrator import runner
 from orchestrator.egress import EgressGuard
 from orchestrator.gateway import Audit, Budget, ClaimResearch, Gateway
@@ -15,22 +16,7 @@ from orchestrator.llm.mock import MockLLM
 from orchestrator.mcp_clients import connect
 
 INPROC = {"sandbox_transport": "inproc", "newsroom_transport": "inproc"}
-EXPECTED = {
-    "Według GUS stopa bezrobocia": "potwierdzone",
-    "Średnioroczna inflacja": "potwierdzone",
-    "Liczba ludności Polski": "fałszywe",
-    "Wzrost cen był spowodowany": "wątpliwe",
-    "Polska przystąpiła do Unii": "potwierdzone",
-    "Do NATO Polska wstąpiła": "fałszywe",
-    "Ludność całej Unii": "potwierdzone",
-    "Najwyższym szczytem Polski": "potwierdzone",
-    "Wisła ma długość": "wątpliwe",
-    "Średni kurs euro": "potwierdzone",
-    "Spółka Wodociągi": "wątpliwe",
-    "Mikołaj Kopernik": "wątpliwe",
-    "Maria Skłodowska-Curie": "fałszywe",
-    "Jak powiedział nam prof.": "wątpliwe",
-}
+EXPECTED = EXPECTED_VERDICTS
 
 
 async def _run(article_id: int, claim_id=None, **kw):

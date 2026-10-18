@@ -492,8 +492,10 @@ def sanitize_html(raw_html: str, max_chars: int = 20_000) -> SanitizeResult:
         main_el = body.find(".//main")
     if main_el is not None and len(_text_of(main_el)) >= 0.3 * len(_text_of(body)):
         main = _visible_text(main_el)  # semantyczny kontener treści — zachowujemy podział na akapity
-    else:
+    elif fallback.strip():
         main = _extract_main(etree.tostring(body, encoding="unicode", method="html"), fallback)
+    else:
+        main = ""
     return _finalize(state, title, fallback, main, max_chars)
 
 
@@ -544,7 +546,7 @@ def _finalize(state: _State, title: str, visible: str, main: str, max_chars: int
     hidden = " ".join(state.hidden_chunks)
     prose = " ".join(c for c in state.hidden_chunks if _is_prose(c))
     if prose:
-        new_numbers = _numbers(prose, significant=True) - _numbers(visible_clean)
+        new_numbers = _numbers(prose) - _numbers(visible_clean)
         if new_numbers:
             state.flags.append({"type": "hidden_visible_mismatch", "severity": "high", "channel": "hidden",
                                 "evidence": "ukryta treść zawiera liczby nieobecne w widocznej: "

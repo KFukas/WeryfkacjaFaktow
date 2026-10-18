@@ -78,6 +78,25 @@ ARTICLES: list[dict[str, str]] = [
 ]
 
 
+# Oczekiwane werdykty dla twierdzeń z seedów (prefiks treści → werdykt) przy danych offline (fixture'y).
+# Używane przez testy pipeline'u i eval agenta (miara poprawności werdyktów).
+EXPECTED_VERDICTS: dict[str, str] = {
+    "Według GUS stopa bezrobocia": "potwierdzone",
+    "Średnioroczna inflacja": "potwierdzone",
+    "Liczba ludności Polski": "fałszywe",
+    "Wzrost cen był spowodowany": "wątpliwe",
+    "Polska przystąpiła do Unii": "potwierdzone",
+    "Do NATO Polska wstąpiła": "fałszywe",
+    "Ludność całej Unii": "potwierdzone",
+    "Najwyższym szczytem Polski": "potwierdzone",
+    "Wisła ma długość": "wątpliwe",
+    "Średni kurs euro": "potwierdzone",
+    "Spółka Wodociągi": "wątpliwe",
+    "Mikołaj Kopernik": "wątpliwe",
+    "Maria Skłodowska-Curie": "fałszywe",
+    "Jak powiedział nam prof.": "wątpliwe",
+}
+
 def seed(reset: bool = False) -> int:
     Base.metadata.create_all(get_engine())
     created = 0

@@ -74,3 +74,17 @@ Format: [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/), wersjonowanie:
 - Testy Vitest (segmentacja, adnotacje, XSS w cytatach/tytułach, panel) + e2e Playwright `scripts/ui_e2e.py`
   ze zrzutami do `docs/img/`.
 - Sanitizer: treść główna z `<article>`/`<main>` z zachowaniem akapitów (trafilatura jako fallback).
+
+### M6 – Red-team
+- 31 spreparowanych stron (`redteam/pages/`, każda z `*.expected.yaml`): CSS, komentarze, meta, atrybuty, JSON-LD,
+  Unicode Tags/zero-width, homoglify, base64/ROT13, znaczniki ról, polecenia narzędzi, eksfiltracja, domena-podróbka,
+  SSRF (loopback, metadane, file://, rebinding), bomby zasobów, zły Content-Type, PDF z ukrytym tekstem, sprzeczność
+  widoczne/ukryte, atak wielostopniowy, socjotechnika, iframe/noscript/template, bidi.
+- Serwer `redteam/server.py` (tylko 127.0.0.1, log żądań do wykrywania kanarków); testowe mapowanie nazw
+  `SANDBOX_TEST_HOSTS`; wyjątki SSRF w testach liczone po IP:port.
+- `tests/redteam/test_sanitizer.py` w CI (31/31) + pomiar fałszywych alarmów na stronach łagodnych.
+- `redteam/eval_agent.py`: attack success rate, wycieki kanarków, wykonane vs zablokowane wywołania narzędzi,
+  poprawność werdyktów; modele mock / gullible / anthropic; workflow `redteam-eval.yml` (workflow_dispatch).
+- Pierwsze raporty: `redteam/reports/RAPORT_2026-10-18_{gullible,mock}.md` — 0/31 udanych ataków, 0 wycieków,
+  0 wykonanych niedozwolonych narzędzi, 0 fałszywych alarmów, 14/14 poprawnych werdyktów.
+- `docs/REDTEAM.md`.

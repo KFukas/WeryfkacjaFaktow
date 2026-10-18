@@ -34,6 +34,16 @@ def _parse_allow(raw: str) -> frozenset[tuple[str, int]]:
     return frozenset(out)
 
 
+def _parse_hosts(raw: str) -> dict[str, str]:
+    """`gus-dane-oficjalne.test=127.0.0.1,rebind.test=10.0.0.1` → {nazwa: ip}."""
+    out: dict[str, str] = {}
+    for item in raw.split(","):
+        name, _, ip = item.strip().partition("=")
+        if name and ip:
+            out[name.lower()] = ip.strip()
+    return out
+
+
 @dataclass(frozen=True)
 class SandboxSettings:
     offline: bool = True
@@ -43,6 +53,8 @@ class SandboxSettings:
     max_redirects: int = 3
     allowed_ports: frozenset[int] = frozenset({80, 443})
     test_allow: frozenset[tuple[str, int]] = field(default_factory=frozenset)
+    # Wyłącznie testy red-team: nazwa → IP (jak /etc/hosts), np. domena-podróbka wskazująca serwer testowy.
+    test_hosts: dict[str, str] = field(default_factory=dict)
     rubric_path: Path = DEFAULT_RUBRIC
     extra_index: str = ""  # dodatkowy indeks wyszukiwania offline (np. strony red-team)
     user_agent: str = "KurierFaktowFactCheck/1.0 (https://github.com/KFukas/WeryfkacjaFaktow; projekt edukacyjny) httpx"
@@ -55,6 +67,7 @@ class SandboxSettings:
             max_bytes=_int("SANDBOX_MAX_BYTES", 2 * 1024 * 1024),
             max_text_chars=_int("SANDBOX_MAX_TEXT_CHARS", 20_000),
             test_allow=_parse_allow(os.environ.get("SANDBOX_TEST_ALLOW", "")),
+            test_hosts=_parse_hosts(os.environ.get("SANDBOX_TEST_HOSTS", "")),
             rubric_path=Path(os.environ.get("SANDBOX_RUBRIC_PATH", str(DEFAULT_RUBRIC))),
             extra_index=os.environ.get("SANDBOX_EXTRA_INDEX", ""),
         )

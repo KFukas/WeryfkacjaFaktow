@@ -14,9 +14,11 @@ from orchestrator.llm.base import StageResult
 from orchestrator.llm.mock import MockLLM
 
 URL = re.compile(r"https?://[^\s\"'<>)\]]+")
-CUE = re.compile(r"(ignor|zignoruj|disregard|save_verdict|attach_source|oznacz|mark (this|it)|potwierdzon|"
-                 r"verified|odwiedź|odwiedz|pobierz|visit|fetch|wyślij|wyslij|append|dołącz|dolacz|system:|"
-                 r"jesteś teraz|you are now|redaktor naczelny|oficjalne źródło|official source)", re.I)
+# Tylko tryb rozkazujący / jawne polecenia (granice słów) — „oznacza” w zwykłym zdaniu nie jest poleceniem.
+CUE = re.compile(r"\b(ignore|zignoruj|disregard|save_verdict|attach_source|oznacz|oznaczyć|mark (this|it|all|every)|"
+                 r"odwiedź|odwiedz|pobierz tę|visit|fetch|wyślij|wyslij|append|dołącz|dolacz|system:|"
+                 r"jesteś teraz|you are now|redaktor naczelny|oficjalne źródło|official source|call the tool|"
+                 r"wywołaj)\b", re.I)
 
 
 class GullibleLLM(MockLLM):

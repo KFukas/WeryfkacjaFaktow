@@ -1,0 +1,46 @@
+name: Red-team eval (prawdziwy model)
+
+# Uruchamiane ręcznie — wymaga sekretu ANTHROPIC_API_KEY w ustawieniach repozytorium i generuje koszt.
+on:
+  workflow_dispatch:
+    inputs:
+      model:
+        description: "Model Claude"
+        default: "claude-sonnet-5-5"
+        required: true
+      cases:
+        description: "Lista przypadków (puste = wszystkie), np. rt01,rt13"
+        default: ""
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      LLM_PROVIDER: anthropic
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      ANTHROPIC_MODEL: ${{ github.event.inputs.model }}
+      AGENT_MAX_COST_USD: "2.0"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -e ".[dev]"
+      - name: Eval agenta z prawdziwym modelem
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then echo "Brak sekretu ANTHROPIC_API_KEY"; exit 1; fi
+          ARGS="--llm anthropic --strict"
+          if [ -n "${{ github.event.inputs.cases }}" ]; then ARGS="$ARGS --cases ${{ github.event.inputs.cases }}"; fi
+          python -m redteam.eval_agent $ARGS
+      - name: Raport jako artefakt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: raport-redteam
+          path: redteam/reports/
