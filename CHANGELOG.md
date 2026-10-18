@@ -60,3 +60,17 @@ Format: [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/), wersjonowanie:
 - `.claude/settings.json`: allowlista testów/lint, odczyt MCP bez pytania, zapis do newsroom z potwierdzeniem,
   blokada `.env` i `WebFetch`.
 - `docs/SKILL.md`; testy frontmattera, konfiguracji, startu serwerów jak w Claude Code i walidatora.
+
+### M5 – Frontend
+- React 18 + Vite + TypeScript + Tailwind + TanStack Query (`frontend/`).
+- Widok artykułu z adnotacjami: kolor + ikona + wzór podkreślenia (ciągłe/przerywane/faliste/kropkowane) — czytelne
+  bez rozróżniania kolorów; tryb jasny/ciemny.
+- Panel boczny twierdzenia: werdykt, pewność, uzasadnienie, źródła z oceną rozpisaną na kryteria, cytaty, ostrzeżenia
+  o wykrytym injection, decyzja redaktora z historią, ponowna weryfikacja twierdzenia.
+- Panel redaktora: lista artykułów i statusów, dodawanie artykułu, uruchomienie weryfikacji, postęp na żywo (SSE),
+  eksport raportu (Markdown/JSON), log agenta (audyt) z filtrem typów.
+- Bezpieczeństwo UI: treść zewnętrzna tylko jako tekst (test pilnuje braku surowego HTML), linki wyłącznie http(s),
+  CSP w buildzie produkcyjnym.
+- Testy Vitest (segmentacja, adnotacje, XSS w cytatach/tytułach, panel) + e2e Playwright `scripts/ui_e2e.py`
+  ze zrzutami do `docs/img/`.
+- Sanitizer: treść główna z `<article>`/`<main>` z zachowaniem akapitów (trafilatura jako fallback).

@@ -487,8 +487,13 @@ def sanitize_html(raw_html: str, max_chars: int = 20_000) -> SanitizeResult:
 
     # 6) widoczny tekst + treść główna
     fallback = _visible_text(body)
-    cleaned_html = etree.tostring(body, encoding="unicode", method="html")
-    main = _extract_main(cleaned_html, fallback)
+    main_el = body.find(".//article")
+    if main_el is None:
+        main_el = body.find(".//main")
+    if main_el is not None and len(_text_of(main_el)) >= 0.3 * len(_text_of(body)):
+        main = _visible_text(main_el)  # semantyczny kontener treści — zachowujemy podział na akapity
+    else:
+        main = _extract_main(etree.tostring(body, encoding="unicode", method="html"), fallback)
     return _finalize(state, title, fallback, main, max_chars)
 
 

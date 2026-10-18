@@ -30,6 +30,7 @@ dependencies = [
 
 [project.optional-dependencies]
 postgres = ["psycopg[binary]>=3.1"]
+e2e = ["playwright>=1.45"]
 dev = [
   "pytest>=8.2",
   "pytest-asyncio>=0.23",
