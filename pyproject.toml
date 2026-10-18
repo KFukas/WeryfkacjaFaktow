@@ -40,7 +40,7 @@ dev = [
 include = ["backend*", "mcp_servers*", "orchestrator*", "redteam*"]
 
 [tool.setuptools.package-data]
-"mcp_servers.web_sandbox" = ["fixtures/*.json"]
+"mcp_servers.web_sandbox" = ["fixtures/*.json", "fixtures/pages/*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

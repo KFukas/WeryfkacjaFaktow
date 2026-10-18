@@ -1,0 +1,280 @@
+[
+  {
+    "provider": "gus",
+    "title": "Bezrobocie rejestrowane — grudzień 2023",
+    "url": "https://stat.gov.pl/obszary-tematyczne/rynek-pracy/bezrobocie-rejestrowane/",
+    "publisher": "Główny Urząd Statystyczny",
+    "published_at": "2024-01-30",
+    "snippet": "Stopa bezrobocia rejestrowanego w końcu grudnia 2023 r. wyniosła 5,1%.",
+    "keywords": [
+      "bezrobocie",
+      "stopa bezrobocia rejestrowanego",
+      "rynek pracy",
+      "grudzień 2023",
+      "GUS"
+    ],
+    "page": "gus_bezrobocie.html",
+    "dataset": {
+      "provider": "gus_bdl",
+      "dataset_id": "60270",
+      "params": {
+        "year": "2023"
+      }
+    }
+  },
+  {
+    "provider": "gus",
+    "title": "Ludność. Stan i struktura — 31 grudnia 2023",
+    "url": "https://stat.gov.pl/obszary-tematyczne/ludnosc/ludnosc/",
+    "publisher": "Główny Urząd Statystyczny",
+    "published_at": "2024-06-20",
+    "snippet": "Liczba ludności Polski według stanu w dniu 31 grudnia 2023 r. wyniosła 37 636,5 tys. osób.",
+    "keywords": [
+      "ludność",
+      "liczba ludności",
+      "Polska",
+      "mieszkańcy",
+      "demografia",
+      "2023",
+      "milionów"
+    ],
+    "page": "gus_ludnosc.html",
+    "dataset": {
+      "provider": "gus_bdl",
+      "dataset_id": "fx-ludnosc",
+      "params": {
+        "year": "2023"
+      }
+    }
+  },
+  {
+    "provider": "gus",
+    "title": "Wskaźniki cen towarów i usług konsumpcyjnych w 2023 roku",
+    "url": "https://stat.gov.pl/obszary-tematyczne/ceny-handel/wskazniki-cen/",
+    "publisher": "Główny Urząd Statystyczny",
+    "published_at": "2024-01-15",
+    "snippet": "Średnioroczny wskaźnik cen towarów i usług konsumpcyjnych w 2023 r. wyniósł 111,4 — ceny wzrosły średnio o 11,4%.",
+    "keywords": [
+      "inflacja",
+      "średnioroczna inflacja",
+      "CPI",
+      "ceny",
+      "wskaźnik cen",
+      "2023"
+    ],
+    "page": "gus_ceny.html",
+    "dataset": {
+      "provider": "gus_bdl",
+      "dataset_id": "fx-cpi",
+      "params": {
+        "year": "2023"
+      }
+    }
+  },
+  {
+    "provider": "gus",
+    "title": "Rocznik Statystyczny RP — ważniejsze szczyty górskie",
+    "url": "https://stat.gov.pl/obszary-tematyczne/roczniki-statystyczne/roczniki-statystyczne/",
+    "publisher": "Główny Urząd Statystyczny",
+    "published_at": "2023-12-20",
+    "snippet": "Najwyższy szczyt w Polsce: Rysy (Tatry) — 2499 m n.p.m.",
+    "keywords": [
+      "szczyt",
+      "najwyższy szczyt",
+      "Rysy",
+      "Tatry",
+      "góry",
+      "wysokość",
+      "m n.p.m."
+    ],
+    "page": "gus_rocznik_szczyty.html"
+  },
+  {
+    "provider": "gov_pl",
+    "title": "Polska w Unii Europejskiej",
+    "url": "https://www.gov.pl/web/dyplomacja/polska-w-unii-europejskiej",
+    "publisher": "Ministerstwo Spraw Zagranicznych",
+    "published_at": "2024-05-01",
+    "snippet": "Polska jest członkiem Unii Europejskiej od 1 maja 2004 r.",
+    "keywords": [
+      "Unia Europejska",
+      "UE",
+      "przystąpienie",
+      "akcesja",
+      "członkostwo",
+      "2004",
+      "przystąpiła"
+    ],
+    "page": "govpl_ue.html"
+  },
+  {
+    "provider": "gov_pl",
+    "title": "Polska w NATO",
+    "url": "https://www.gov.pl/web/obrona-narodowa/polska-w-nato",
+    "publisher": "Ministerstwo Obrony Narodowej",
+    "published_at": "2024-03-12",
+    "snippet": "Polska jest członkiem Sojuszu Północnoatlantyckiego (NATO) od 12 marca 1999 r.",
+    "keywords": [
+      "NATO",
+      "Sojusz Północnoatlantycki",
+      "członkostwo",
+      "wstąpiła",
+      "1999"
+    ],
+    "page": "govpl_nato.html"
+  },
+  {
+    "provider": "eurostat",
+    "title": "Population on 1 January — EU27 (tps00001)",
+    "url": "https://ec.europa.eu/eurostat/databrowser/view/tps00001/default/table",
+    "publisher": "Eurostat",
+    "published_at": "2024-07-11",
+    "snippet": "On 1 January 2024 the population of the EU was estimated at 449.2 million.",
+    "keywords": [
+      "ludność",
+      "Unia Europejska",
+      "UE",
+      "population",
+      "EU27",
+      "mieszkańców",
+      "2024",
+      "mln"
+    ],
+    "page": "eurostat_population.html",
+    "dataset": {
+      "provider": "eurostat",
+      "dataset_id": "tps00001",
+      "params": {
+        "geo": "EU27_2020",
+        "time": "2024"
+      }
+    }
+  },
+  {
+    "provider": "wikipedia",
+    "title": "Wisła",
+    "url": "https://pl.wikipedia.org/wiki/Wis%C5%82a",
+    "publisher": "Wikipedia",
+    "published_at": "2024-09-01",
+    "snippet": "Wisła – najdłuższa rzeka Polski o długości 1022 km. Do 2009 r. GUS podawał 1047 km; w 2010 r. podał nową długość 1022 km.",
+    "keywords": [
+      "Wisła",
+      "rzeka",
+      "długość",
+      "km",
+      "najdłuższa rzeka"
+    ],
+    "page": "wiki_wisla.html"
+  },
+  {
+    "provider": "wikipedia",
+    "title": "Rysy",
+    "url": "https://pl.wikipedia.org/wiki/Rysy",
+    "publisher": "Wikipedia",
+    "published_at": "2024-08-15",
+    "snippet": "Rysy – szczyt w Tatrach. Wierzchołek północno-zachodni (2499 m n.p.m.) jest najwyższym punktem Polski; najwyższy, środkowy wierzchołek (2501 m) leży na Słowacji.",
+    "keywords": [
+      "Rysy",
+      "szczyt",
+      "Tatry",
+      "najwyższy szczyt",
+      "wysokość"
+    ],
+    "page": "wiki_rysy.html"
+  },
+  {
+    "provider": "wikipedia",
+    "title": "Mikołaj Kopernik",
+    "url": "https://pl.wikipedia.org/wiki/Miko%C5%82aj_Kopernik",
+    "publisher": "Wikipedia",
+    "published_at": "2024-07-01",
+    "snippet": "Mikołaj Kopernik (ur. 19 lutego 1473 w Toruniu, zm. 24 maja 1543 we Fromborku) – astronom, matematyk.",
+    "keywords": [
+      "Kopernik",
+      "Mikołaj Kopernik",
+      "urodził",
+      "Toruń",
+      "1473",
+      "astronom"
+    ],
+    "page": "wiki_kopernik.html"
+  },
+  {
+    "provider": "wikipedia",
+    "title": "Maria Skłodowska-Curie",
+    "url": "https://pl.wikipedia.org/wiki/Maria_Sk%C5%82odowska-Curie",
+    "publisher": "Wikipedia",
+    "published_at": "2024-06-10",
+    "snippet": "Maria Skłodowska-Curie – fizyczka i chemiczka, dwukrotna laureatka Nagrody Nobla (1903 i 1911).",
+    "keywords": [
+      "Skłodowska-Curie",
+      "Maria",
+      "Nobel",
+      "Nagroda Nobla",
+      "laureatka",
+      "fizyka",
+      "chemia"
+    ],
+    "page": "wiki_sklodowska.html"
+  },
+  {
+    "provider": "nobelprize",
+    "title": "Marie Curie — Facts",
+    "url": "https://www.nobelprize.org/prizes/physics/1903/marie-curie/facts/",
+    "publisher": "Nobel Prize Outreach",
+    "published_at": "2024-01-01",
+    "snippet": "Marie Curie was awarded the Nobel Prize twice: the Nobel Prize in Physics 1903 and the Nobel Prize in Chemistry 1911.",
+    "keywords": [
+      "Skłodowska-Curie",
+      "Marie Curie",
+      "Nobel",
+      "Nagroda Nobla",
+      "nagrody"
+    ],
+    "page": "nobel_curie.html"
+  },
+  {
+    "provider": "wikipedia",
+    "title": "Unia Europejska",
+    "url": "https://pl.wikipedia.org/wiki/Unia_Europejska",
+    "publisher": "Wikipedia",
+    "published_at": "2024-09-20",
+    "snippet": "Unia Europejska – gospodarczo-polityczny związek 27 państw europejskich. Polska jest członkiem od 1 maja 2004 r.",
+    "keywords": [
+      "Unia Europejska",
+      "UE",
+      "państwa członkowskie",
+      "przystąpienie",
+      "2004",
+      "ludność"
+    ],
+    "page": "wiki_ue.html"
+  },
+  {
+    "provider": "nbp",
+    "title": "Kurs średni euro (EUR) — tabela A z 2 stycznia 2024 r.",
+    "url": "https://api.nbp.pl/api/exchangerates/rates/A/EUR/2024-01-02/",
+    "publisher": "Narodowy Bank Polski",
+    "published_at": "2024-01-02",
+    "snippet": "Tabela kursów średnich NBP nr 001/A/NBP/2024 z dnia 2024-01-02: euro (EUR).",
+    "keywords": [
+      "kurs",
+      "euro",
+      "EUR",
+      "NBP",
+      "kurs średni",
+      "waluta",
+      "złoty",
+      "2024"
+    ],
+    "dataset": {
+      "provider": "nbp",
+      "dataset_id": "exchangerates",
+      "params": {
+        "table": "A",
+        "code": "EUR",
+        "date": "2024-01-02"
+      }
+    }
+  }
+]

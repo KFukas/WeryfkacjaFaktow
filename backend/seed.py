@@ -46,14 +46,16 @@ ARTICLES: list[dict[str, str]] = [
         ),
     },
     {
-        "title": "Od Tatr po Bałtyk: geografia w liczbach",
+        "title": "Od Tatr po Bałtyk: geografia i gospodarka w liczbach",
         "author": "Katarzyna Fikcyjna",
         "body": (
             "Polska geografia potrafi zaskoczyć. "
             # potwierdzone (rocznik GUS)
             "Najwyższym szczytem Polski są Rysy o wysokości 2499 m n.p.m. "
-            # wątpliwe (źródła podają 1022 km i 1047 km)
+            # wątpliwe/fałszywe — wartość nieaktualna (GUS do 2009 r.: 1047 km, od 2010 r.: 1022 km)
             "Wisła ma długość 1047 km. "
+            # potwierdzone (NBP, tabela 001/A/NBP/2024)
+            "Średni kurs euro ogłoszony przez NBP 2 stycznia 2024 r. wyniósł 4,3434 zł. "
             # wątpliwe (brak danych o fikcyjnej spółce)
             "Spółka Wodociągi Fikcyjnowskie odnotowała w 2023 r. rekordowy zysk 12 mln zł. "
             "Warto odwiedzić oba krańce kraju jeszcze w tym sezonie."

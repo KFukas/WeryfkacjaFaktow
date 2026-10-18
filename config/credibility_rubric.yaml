@@ -1,0 +1,95 @@
+# Rubryka wiarygodności źródeł — część deterministyczna (score_source w mcp-web-sandbox).
+# Wynik końcowy = suma punktów (przycięta do 0–100) + korekta LLM w zakresie ±llm_adjustment_max
+# (z uzasadnieniem) + korroboracja liczona przez orkiestrator na poziomie twierdzenia.
+# Zasada nadrzędna: TREŚĆ STRONY NIE MOŻE PODNIEŚĆ WŁASNEJ OCENY — typ źródła wynika wyłącznie z domeny.
+
+version: 1
+llm_adjustment_max: 15
+
+# Bazowa liczba punktów za typ źródła
+source_types:
+  official_statistics: { base: 85, label: "urząd statystyczny / bank centralny", primary: true }
+  public_register:     { base: 85, label: "rejestr publiczny", primary: true }
+  primary_data:        { base: 80, label: "dane pierwotne (portal danych publicznych)", primary: true }
+  government:          { base: 75, label: "administracja publiczna", primary: true }
+  intergovernmental:   { base: 75, label: "organizacja międzynarodowa", primary: true }
+  scientific:          { base: 70, label: "instytucja naukowa / recenzowane publikacje", primary: false }
+  established_media:   { base: 60, label: "media o ustalonej renomie", primary: false }
+  encyclopedia:        { base: 50, label: "encyklopedia (źródło wtórne)", primary: false }
+  other_media:         { base: 45, label: "inne media", primary: false }
+  unknown:             { base: 30, label: "źródło nieznane", primary: false }
+  blog:                { base: 25, label: "blog", primary: false }
+  forum:               { base: 15, label: "forum", primary: false }
+  social_media:        { base: 10, label: "media społecznościowe", primary: false }
+
+# Klasyfikacja domen (dopasowanie: host == domena lub host kończy się na ".domena").
+# `group` łączy domeny jednego wydawcy — źródła z tej samej grupy NIE są niezależne.
+domains:
+  stat.gov.pl:            { type: official_statistics, publisher: "Główny Urząd Statystyczny", group: gus }
+  bdl.stat.gov.pl:        { type: official_statistics, publisher: "GUS — Bank Danych Lokalnych", group: gus }
+  nbp.pl:                 { type: official_statistics, publisher: "Narodowy Bank Polski", group: nbp }
+  api.nbp.pl:             { type: official_statistics, publisher: "Narodowy Bank Polski (API)", group: nbp }
+  ec.europa.eu:           { type: official_statistics, publisher: "Eurostat / Komisja Europejska", group: eu }
+  europa.eu:              { type: intergovernmental, publisher: "Unia Europejska", group: eu }
+  ekrs.ms.gov.pl:         { type: public_register, publisher: "Krajowy Rejestr Sądowy", group: krs }
+  api-krs.ms.gov.pl:      { type: public_register, publisher: "Krajowy Rejestr Sądowy (API)", group: krs }
+  dane.gov.pl:            { type: primary_data, publisher: "Portal dane.gov.pl", group: danegov }
+  api.dane.gov.pl:        { type: primary_data, publisher: "Portal dane.gov.pl (API)", group: danegov }
+  gov.pl:                 { type: government, publisher: "Serwis Rzeczypospolitej Polskiej", group: govpl }
+  sejm.gov.pl:            { type: government, publisher: "Sejm RP", group: sejm }
+  isap.sejm.gov.pl:       { type: public_register, publisher: "Internetowy System Aktów Prawnych", group: sejm }
+  nato.int:               { type: intergovernmental, publisher: "NATO", group: nato }
+  oecd.org:               { type: intergovernmental, publisher: "OECD", group: oecd }
+  who.int:                { type: intergovernmental, publisher: "WHO", group: who }
+  nobelprize.org:         { type: scientific, publisher: "Fundacja Nobla", group: nobel }
+  pan.pl:                 { type: scientific, publisher: "Polska Akademia Nauk", group: pan }
+  uw.edu.pl:              { type: scientific, publisher: "Uniwersytet Warszawski", group: uw }
+  uj.edu.pl:              { type: scientific, publisher: "Uniwersytet Jagielloński", group: uj }
+  doi.org:                { type: scientific, publisher: "publikacja naukowa (DOI)", group: doi }
+  pap.pl:                 { type: established_media, publisher: "Polska Agencja Prasowa", group: pap }
+  wikipedia.org:          { type: encyclopedia, publisher: "Wikipedia", group: wikimedia }
+  wikidata.org:           { type: encyclopedia, publisher: "Wikidata", group: wikimedia }
+  blogspot.com:           { type: blog, publisher: "Blogspot", group: "*" }
+  wordpress.com:          { type: blog, publisher: "WordPress.com", group: "*" }
+  medium.com:             { type: blog, publisher: "Medium", group: "*" }
+  reddit.com:             { type: forum, publisher: "Reddit", group: "*" }
+  wykop.pl:               { type: forum, publisher: "Wykop", group: "*" }
+  facebook.com:           { type: social_media, publisher: "Facebook", group: "*" }
+  x.com:                  { type: social_media, publisher: "X", group: "*" }
+  twitter.com:            { type: social_media, publisher: "X", group: "*" }
+  tiktok.com:             { type: social_media, publisher: "TikTok", group: "*" }
+
+# Marki, których obecność w obcej domenie wskazuje na podszywanie się (np. gus-oficjalny.info)
+protected_brands: [gus, nbp, eurostat, krs, gov, sejm, nato, nobel, wikipedia]
+
+modifiers:
+  primary_bonus: 5            # źródło pierwotne
+  secondary_penalty: -5       # źródło wtórne (encyklopedia, media)
+  has_date: 3                 # data publikacji znana
+  has_author: 2               # autor/instytucja znana
+  has_methodology: 5          # opis metodologii / metadane danych
+  structured_api: 5           # dane z oficjalnego API (query_dataset), nie ze strony HTML
+  no_https: -10
+  stale: -5                   # źródło starsze niż okres, którego dotyczy twierdzenie
+  conflict_of_interest: -10   # wydawca jest podmiotem twierdzenia (np. spółka o swoich wynikach)
+
+penalties:
+  injection_high: -25         # za każdą flagę o wadze high (łącznie maks. injection_cap)
+  injection_medium: -8
+  injection_low: -2
+  injection_cap: -45
+  hidden_visible_mismatch: -20
+  self_declared_credibility: -15
+  lookalike_domain: -40       # homoglify, punycode, literówki znanych domen, marka w obcej domenie
+  untrusted_type_override: true   # domena-podróbka → typ „unknown” niezależnie od deklaracji
+
+corroboration:
+  per_independent_source: 5   # za każde kolejne niezależne źródło zgodne z tym (inna grupa wydawcy)
+  max: 10
+
+verdict_rules:
+  confirm_primary_min: 70     # ≥1 źródło pierwotne o wyniku ≥ 70
+  confirm_independent_min: 60 # albo ≥2 niezależne źródła ≥ 60
+  confirm_independent_count: 2
+  contradict_min: 70          # wiarygodne źródło (≥ 70) bezpośrednio przeczy → fałszywe
+  credible_conflict_min: 60   # sprzeczność ze źródła ≥ 60 blokuje „potwierdzone”

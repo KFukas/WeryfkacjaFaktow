@@ -1,0 +1,11 @@
+[
+  {"code": "tps00001", "title": "Population on 1 January (ludność na 1 stycznia)",
+   "keywords": ["ludność", "population", "mieszkańcy", "liczba ludności", "UE", "Unia Europejska"],
+   "params": {"geo": "EU27_2020"}},
+  {"code": "prc_hicp_aind", "title": "HICP — annual average inflation (inflacja HICP, średnia roczna)",
+   "keywords": ["inflacja", "HICP", "ceny", "inflation"], "params": {"geo": "PL", "unit": "RCH_A_AVG", "coicop": "CP00"}},
+  {"code": "une_rt_a", "title": "Unemployment by sex and age — annual data (bezrobocie)",
+   "keywords": ["bezrobocie", "unemployment", "stopa bezrobocia"], "params": {"geo": "PL", "age": "Y15-74", "unit": "PC_ACT", "sex": "T"}},
+  {"code": "nama_10_gdp", "title": "GDP and main components (PKB)",
+   "keywords": ["PKB", "GDP", "produkt krajowy brutto", "wzrost gospodarczy"], "params": {"geo": "PL", "unit": "CP_MEUR", "na_item": "B1GQ"}}
+]

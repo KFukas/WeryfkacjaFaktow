@@ -1,0 +1,121 @@
+{
+  "gus_bdl:fx-ludnosc": {
+    "text": "GUS — ludność Polski, stan na 31 grudnia 2023 r.: 37 636 508 osób (ok. 37,6 mln)",
+    "data": [
+      {
+        "name": "Polska",
+        "values": [
+          {
+            "year": "2023",
+            "val": 37636508
+          }
+        ]
+      }
+    ],
+    "metadata": {
+      "publisher": "Główny Urząd Statystyczny",
+      "url": "https://stat.gov.pl/obszary-tematyczne/ludnosc/ludnosc/",
+      "title": "Ludność — stan i struktura",
+      "published_at": "2024-06-20",
+      "structured_api": true,
+      "fixture": true
+    }
+  },
+  "gus_bdl:fx-cpi": {
+    "text": "GUS — średnioroczny wskaźnik cen towarów i usług konsumpcyjnych (rok poprzedni = 100): 2023: 111,4 (inflacja 11,4%)",
+    "data": [
+      {
+        "name": "Polska",
+        "values": [
+          {
+            "year": "2023",
+            "val": 111.4
+          }
+        ]
+      }
+    ],
+    "metadata": {
+      "publisher": "Główny Urząd Statystyczny",
+      "url": "https://stat.gov.pl/obszary-tematyczne/ceny-handel/wskazniki-cen/",
+      "title": "Wskaźniki cen towarów i usług konsumpcyjnych",
+      "published_at": "2024-01-15",
+      "structured_api": true,
+      "fixture": true
+    }
+  },
+  "eurostat:tps00001": {
+    "text": "Eurostat tps00001 — Population on 1 January, European Union - 27 countries (from 2020), 2024: 449489862 (ok. 449,5 mln; pierwsza estymacja z lipca 2024: 449,2 mln)",
+    "data": {
+      "rows": [
+        "EU27_2020 / 2024: 449489862"
+      ]
+    },
+    "metadata": {
+      "publisher": "Eurostat",
+      "url": "https://ec.europa.eu/eurostat/databrowser/view/tps00001/default/table",
+      "title": "Population on 1 January",
+      "published_at": "2024-07-11",
+      "structured_api": true,
+      "fixture": true
+    }
+  },
+  "nbp:exchangerates": {
+    "text": "euro (EUR) 2024-01-02: 4.3434 PLN (tabela 001/A/NBP/2024)",
+    "data": {
+      "currency": "euro",
+      "code": "EUR",
+      "rates": [
+        {
+          "no": "001/A/NBP/2024",
+          "effectiveDate": "2024-01-02",
+          "mid": 4.3434
+        }
+      ]
+    },
+    "metadata": {
+      "publisher": "Narodowy Bank Polski",
+      "url": "https://api.nbp.pl/api/exchangerates/rates/A/EUR/2024-01-02/?format=json",
+      "title": "NBP — kurs średni EUR",
+      "published_at": "2024-01-02",
+      "structured_api": true,
+      "fixture": true
+    }
+  },
+  "krs:0000000000": {
+    "text": "KRS 0000000000: brak podmiotu o podanym numerze (dane testowe)",
+    "data": {},
+    "metadata": {
+      "publisher": "Krajowy Rejestr Sądowy",
+      "url": "https://api-krs.ms.gov.pl/api/krs/OdpisAktualny/0000000000",
+      "title": "Odpis KRS (dane testowe)",
+      "structured_api": true,
+      "fixture": true
+    }
+  },
+  "gus_bdl:60270": {
+    "text": "GUS BDL — zmienna 60270 (stopa bezrobocia rejestrowanego, %), POLSKA: 2022: 5,2; 2023: 5,1",
+    "data": [
+      {
+        "name": "Polska",
+        "values": [
+          {
+            "year": "2022",
+            "val": 5.2
+          },
+          {
+            "year": "2023",
+            "val": 5.1
+          }
+        ]
+      }
+    ],
+    "metadata": {
+      "publisher": "Główny Urząd Statystyczny",
+      "url": "https://bdl.stat.gov.pl/api/v1/data/by-variable/60270?unit-level=0&year=2023",
+      "title": "Stopa bezrobocia rejestrowanego",
+      "published_at": "2024-01-30",
+      "structured_api": true,
+      "fixture": true
+    }
+  }
+}
