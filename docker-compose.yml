@@ -1,0 +1,116 @@
+# Kurier Faktów — uruchomienie w Dockerze.
+#   docker compose up --build                  # api, db, mcp-web-sandbox, frontend
+#   docker compose --profile redteam up --build  # + serwer stron red-team (sieć wewnętrzna sandboksa)
+#
+# Strefy sieciowe (zasada najmniejszych uprawnień):
+#   trusted  (internal)  — api ↔ db; sandbox NIE ma tu dostępu
+#   sandbox  (internal)  — api ↔ mcp-web-sandbox (+ redteam)
+#   egress               — wyjście sandboksa do internetu (publiczne API, strony)
+#   public               — porty publikowane na hosta (api :8000, frontend :8080) i wyjście api do Anthropic API
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: kurier
+      POSTGRES_PASSWORD: kurier
+      POSTGRES_DB: kurier
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks: [trusted]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kurier -d kurier"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  mcp-web-sandbox:
+    build:
+      context: .
+      dockerfile: docker/sandbox.Dockerfile
+    # Tylko zmienne SANDBOX_* — żadnych kluczy API ani adresu bazy.
+    environment:
+      SANDBOX_OFFLINE: ${SANDBOX_OFFLINE:-1}
+      SANDBOX_TIMEOUT_S: ${SANDBOX_TIMEOUT_S:-10}
+      SANDBOX_MAX_BYTES: ${SANDBOX_MAX_BYTES:-2097152}
+      SANDBOX_MAX_TEXT_CHARS: ${SANDBOX_MAX_TEXT_CHARS:-20000}
+      SANDBOX_TEST_ALLOW: ${SANDBOX_TEST_ALLOW:-}
+      SANDBOX_HTTP_ALLOWED_HOSTS: mcp-web-sandbox:8765
+    networks: [sandbox, egress]
+    read_only: true
+    tmpfs:
+      - /tmp:size=32m
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    cpus: "0.5"
+    mem_limit: 512m
+    pids_limit: 128
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; socket.create_connection(('127.0.0.1', 8765), 2)"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  api:
+    build:
+      context: .
+      dockerfile: docker/api.Dockerfile
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DATABASE_URL: postgresql+psycopg://kurier:kurier@db:5432/kurier
+      WEB_SANDBOX_TRANSPORT: http
+      WEB_SANDBOX_URL: http://mcp-web-sandbox:8765/mcp
+      NEWSROOM_TRANSPORT: stdio
+      LLM_PROVIDER: ${LLM_PROVIDER:-mock}
+      CORS_ORIGINS: http://localhost:8080,http://127.0.0.1:8080,http://localhost:5173
+    depends_on:
+      db:
+        condition: service_healthy
+      mcp-web-sandbox:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    networks: [trusted, sandbox, public]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    networks: [public]
+
+  redteam:
+    profiles: [redteam]
+    build:
+      context: .
+      dockerfile: docker/redteam.Dockerfile
+    networks:
+      sandbox:
+        ipv4_address: 172.28.5.99
+    read_only: true
+    tmpfs:
+      - /rt/redteam/logs:size=16m,uid=65534
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+
+networks:
+  trusted:
+    internal: true
+  sandbox:
+    internal: true
+    ipam:
+      config:
+        - subnet: 172.28.5.0/24
+  egress: {}
+  public: {}
+
+volumes:
+  db-data: {}

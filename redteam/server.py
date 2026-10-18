@@ -110,11 +110,11 @@ def make_handler(log: RequestLog, cases: dict[str, dict[str, Any]]):
 
 
 class RedteamServer:
-    def __init__(self, port: int = 8899, log_file: Path | None = None):
+    def __init__(self, port: int = 8899, log_file: Path | None = None, host: str = "127.0.0.1"):
         self.cases = {c["id"]: c for c in load_cases()}
         self.log = RequestLog(log_file)
         handler = make_handler(self.log, self.cases)
-        self.httpd = ThreadingHTTPServer(("127.0.0.1", port), handler)  # tylko localhost
+        self.httpd = ThreadingHTTPServer((host, port), handler)  # domyślnie tylko localhost
         self.httpd.daemon_threads = True
         self.port = self.httpd.server_address[1]
         self._thread: threading.Thread | None = None
@@ -136,8 +136,9 @@ class RedteamServer:
 def main() -> None:
     p = argparse.ArgumentParser(description="Serwer stron red-team (tylko 127.0.0.1)")
     p.add_argument("--port", type=int, default=8899)
+    p.add_argument("--host", default="127.0.0.1", help="0.0.0.0 tylko w kontenerze bez publikowanego portu")
     args = p.parse_args()
-    srv = RedteamServer(args.port, LOGS / "requests.jsonl")
+    srv = RedteamServer(args.port, LOGS / "requests.jsonl", host=args.host)
     print(f"Serwer red-team: http://127.0.0.1:{srv.port}/rt/<id> — {len(srv.cases)} przypadków. Ctrl+C kończy.")
     try:
         srv.httpd.serve_forever()

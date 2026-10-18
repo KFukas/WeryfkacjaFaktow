@@ -73,3 +73,38 @@ jobs:
           npm run typecheck
           npm test
           npm run build
+
+  docker:
+    name: Docker compose — build i test dymny
+    runs-on: ubuntu-latest
+    needs: [backend]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build i start (api, db, mcp-web-sandbox, frontend)
+        run: docker compose up -d --build --wait --wait-timeout 300
+      - name: Weryfikacja artykułu przez API w Dockerze (sandbox po HTTP w osobnym kontenerze)
+        run: |
+          set -e
+          curl -fsS http://localhost:8000/api/health
+          curl -fsS http://localhost:8080/ | grep -q "Kurier"
+          RUN=$(curl -fsS -X POST http://localhost:8000/api/articles/2/verify -H 'Content-Type: application/json' -d '{}' | python3 -c 'import sys,json; print(json.load(sys.stdin)["id"])')
+          for i in $(seq 1 90); do
+            STATUS=$(curl -fsS http://localhost:8000/api/runs/$RUN | python3 -c 'import sys,json; print(json.load(sys.stdin)["status"])')
+            [ "$STATUS" != "queued" ] && [ "$STATUS" != "running" ] && break
+            sleep 2
+          done
+          echo "status: $STATUS"; test "$STATUS" = "completed"
+          curl -fsS http://localhost:8000/api/articles/2/claims | python3 -c 'import sys,json; v=sorted({c["verdict"] for c in json.load(sys.stdin)}); print(v); assert v==["fałszywe","potwierdzone"], v'
+          curl -fsS http://localhost:8080/api/articles | python3 -c 'import sys,json; assert len(json.load(sys.stdin))>=4'
+      - name: Izolacja sandboksa — brak sekretów i brak dostępu do bazy
+        run: |
+          set -e
+          docker compose exec -T mcp-web-sandbox sh -c 'env | grep -E "ANTHROPIC|DATABASE_URL" && exit 1 || echo "brak sekretów w środowisku sandboksa"'
+          docker compose exec -T mcp-web-sandbox python -c "import socket; socket.create_connection(('db',5432),3)" && exit 1 || echo "sandbox nie łączy się z bazą"
+          docker compose exec -T mcp-web-sandbox sh -c 'touch /sandbox/x 2>/dev/null && exit 1 || echo "system plików tylko do odczytu"'
+      - name: Logi przy błędzie
+        if: failure()
+        run: docker compose logs --no-color | tail -300
+      - name: Sprzątanie
+        if: always()
+        run: docker compose down -v

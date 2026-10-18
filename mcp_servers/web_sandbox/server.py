@@ -76,7 +76,16 @@ def main() -> None:
     parser.add_argument("--port", type=int, default=8765)
     args = parser.parse_args()
     if args.http:
-        server.run("streamable-http", host=args.host, port=args.port)
+        import os
+
+        from mcp.server.transport_security import TransportSecuritySettings
+
+        hosts = os.environ.get("SANDBOX_HTTP_ALLOWED_HOSTS",
+                               f"mcp-web-sandbox:{args.port},localhost:{args.port},127.0.0.1:{args.port}")
+        # Ochrona przed DNS rebinding samego serwera MCP: tylko oczekiwane nagłówki Host.
+        security = TransportSecuritySettings(enable_dns_rebinding_protection=True,
+                                             allowed_hosts=[h.strip() for h in hosts.split(",") if h.strip()])
+        server.run("streamable-http", host=args.host, port=args.port, transport_security=security)
     else:
         server.run("stdio")
 
