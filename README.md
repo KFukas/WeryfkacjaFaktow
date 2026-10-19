@@ -36,7 +36,11 @@ flowchart LR
 
 ## Szybki start (≤ 5 komend)
 
-Windows (PowerShell):
+**Windows — najprościej:** kliknij dwukrotnie **`URUCHOM.bat`** w głównym folderze projektu. Przy pierwszym
+uruchomieniu zainstaluje wszystko (Python 3.12 i Node.js muszą być zainstalowane), zbuduje panel, uruchomi API
+i panel, a następnie otworzy <http://localhost:8080>. Zatrzymanie: **`ZATRZYMAJ.bat`**.
+
+Windows (PowerShell, krok po kroku):
 ```powershell
 git clone https://github.com/KFukas/WeryfkacjaFaktow.git
 cd WeryfkacjaFaktow

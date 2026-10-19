@@ -2,6 +2,13 @@
 
 Format: [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/), wersjonowanie: [SemVer](https://semver.org/lang/pl/).
 
+## [Unreleased]
+- `URUCHOM.bat` w głównym folderze: start całego projektu dwuklikiem (instalacja przy pierwszym uruchomieniu, build
+  panelu, API + panel, otwarcie przeglądarki); automatyczny wybór wolnych portów (panel 8080, API 8010 — port 8000
+  zostawiony innym projektom).
+- `ZATRZYMAJ.bat`: zatrzymuje wyłącznie procesy tego projektu.
+- `scripts/serve-build.ps1`: build produkcyjny panelu na :8080 bez Dockera.
+
 ## [1.0.0] — 2026-10-18
 
 ### M0 – Szkielet

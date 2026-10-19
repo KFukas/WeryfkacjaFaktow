@@ -24,6 +24,22 @@ Skrypty instalacyjne kopiują `.env.example` → `.env`. Najważniejsze zmienne:
 | `AGENT_MAX_CLAIMS` / `AGENT_MAX_TOOL_CALLS` / `AGENT_MAX_COST_USD` | 12 / 60 / 1.50 | limity na artykuł |
 | `SANDBOX_OFFLINE` | `1` | `1` = publiczne API i strony z fixture'ów (deterministycznie); `0` = prawdziwy internet |
 
+## Najprościej — Windows: `URUCHOM.bat`
+W głównym folderze projektu kliknij dwukrotnie **`URUCHOM.bat`**. Skrypt:
+1. przy pierwszym uruchomieniu wykonuje instalację (`scripts\setup.ps1`: venv, zależności, `.env`, baza, dane przykładowe),
+2. buduje panel (tylko gdy nie ma buildu; ponowny build: `URUCHOM.bat build`, np. po aktualizacji kodu),
+3. uruchamia API i panel w dwóch zminimalizowanych oknach „Kurier Faktow - …”,
+4. czeka, aż odpowiedzą, i otwiera przeglądarkę.
+
+| Element | Adres |
+|---|---|
+| Panel redaktora (build produkcyjny) | <http://localhost:8080> |
+| API / OpenAPI | <http://127.0.0.1:8010/docs> |
+
+Port 8000 jest celowo zostawiony dla innych projektów. Jeśli 8080 lub 8010 zajmuje inna aplikacja, skrypt wybiera
+kolejny wolny port i wypisuje go w oknie. Ponowne uruchomienie, gdy projekt już działa, tylko otwiera przeglądarkę.
+**Zatrzymanie:** `ZATRZYMAJ.bat` — zamyka wyłącznie procesy tego projektu (inne aplikacje na tych samych portach nie są ruszane).
+
 ## Uruchomienie lokalne — Windows (PowerShell)
 ```powershell
 git clone https://github.com/KFukas/WeryfkacjaFaktow.git
@@ -101,7 +117,7 @@ python scripts/ui_e2e.py --screenshots docs/img     # przy uruchomionym API i pa
 ## Rozwiązywanie problemów
 | Objaw | Przyczyna / rozwiązanie |
 |---|---|
-| `localhost:8080` — `ERR_CONNECTION_REFUSED` | port 8080 to panel z **Dockera** (`docker compose up --build`). Bez Dockera: panel deweloperski `.\scripts\start.ps1` → <http://127.0.0.1:5173> albo build produkcyjny `.\scripts\serve-build.ps1` → <http://localhost:8080> (API na :8000 musi działać) |
+| `localhost:8080` — `ERR_CONNECTION_REFUSED` | port 8080 to panel z **Dockera** (`docker compose up --build`). Bez Dockera: kliknij `URUCHOM.bat`, albo panel deweloperski `.\scripts\start.ps1` → <http://127.0.0.1:5173> albo build produkcyjny `.\scripts\serve-build.ps1` → <http://localhost:8080> (API na :8000 musi działać) |
 | `py -3.12` nie działa | zainstaluj Python 3.12 (python.org) albo ustaw `PYTHON=python3.12` dla `setup.sh` |
 | Panel: „Nie można połączyć się z API” | API nie działa na :8000; uruchom `uvicorn backend.main:app --port 8000`; w dev Vite przekazuje `/api` na 127.0.0.1:8000 (`VITE_API_PROXY`) |
 | Przebieg kończy się `failed: LLM_PROVIDER=anthropic wymaga ANTHROPIC_API_KEY` | uzupełnij klucz w `.env` albo ustaw `LLM_PROVIDER=mock` |
@@ -113,4 +129,5 @@ python scripts/ui_e2e.py --screenshots docs/img     # przy uruchomionym API i pa
 | Docker: `env_file` z `required: false` nie działa | zaktualizuj Docker Compose do v2.24+ albo utwórz pusty `.env` |
 | `pip install` na Windows: `OSError: [Errno 2] No such file or directory: …\anthropic\types\beta\…` | limit 260 znaków ścieżki — sklonuj repozytorium do krótkiej ścieżki (np. `C:\Projekty\WeryfkacjaFaktow`) albo włącz długie ścieżki (`LongPathsEnabled` w rejestrze / zasadach grupy) |
 | `setup.ps1`: błędy parsera z „krzaczkami” | używasz zmodyfikowanego skryptu z polskimi znakami bez BOM — skrypty `.ps1` w repo są celowo w ASCII (Windows PowerShell 5.1 czyta je jako ANSI) |
+| `URUCHOM.bat`: „serwery nie odpowiedziały w ciągu minuty” | otwórz zminimalizowane okna „Kurier Faktow - API” / „- panel” — zwykle brakująca zależność (uruchom `scripts\setup.ps1`) albo port zajęty przez inną aplikację |
 | SQLite „database is locked” | zatrzymaj inne procesy używające `data/kurier.db`; WAL jest włączony, timeout 30 s |
