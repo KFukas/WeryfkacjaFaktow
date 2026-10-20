@@ -8,8 +8,10 @@ Adres: <http://localhost:5173> (lokalnie) albo <http://localhost:8080> (Docker).
 ![Lista artykułów](img/panel-redaktora.png)
 
 ## 1. Lista artykułów
-- Każdy artykuł ma status: **szkic** (jeszcze niesprawdzany), **w weryfikacji** (asystent go sprawdził, czeka na
-  redaktora), **zweryfikowany** (redaktor zatwierdził).
+- Każdy artykuł ma znaczek statusu: **szkic** (jeszcze niesprawdzany), **w weryfikacji** (asystent go sprawdził,
+  czeka na redaktora), **✔ zweryfikowany** (redaktor zatwierdził).
+- Pod każdym artykułem jest przycisk **✔ Oznacz jako zweryfikowany** (dla zatwierdzonych: **Cofnij zatwierdzenie**).
+  Przycisk jest nieaktywny, dopóki artykuł nie został sprawdzony przez asystenta — obok widać powód.
 - Pod tytułem widać liczbę twierdzeń w każdej kategorii (np. „✔ potwierdzone: 2, ✘ fałszywe: 1”).
 - **Weryfikuj** — uruchamia sprawdzanie artykułu. **Nowy artykuł** (formularz po prawej) — wklej tytuł, autora i treść.
 
@@ -60,7 +62,11 @@ redaktora.
 ## 6. Raport i zatwierdzenie
 - **Raport .md** — plik do pobrania (do wklejenia w system redakcyjny lub mail).
 - **Raport .json** — dane dla innych systemów.
-- **Oznacz jako zweryfikowany** — gdy wszystkie twierdzenia są wyjaśnione.
+- **✔ Oznacz jako zweryfikowany** (pod przyciskami, obok znaczka statusu) — gdy wszystkie twierdzenia są wyjaśnione.
+  Status zmienia się na „zweryfikowany”. Pomyłka? **Cofnij zatwierdzenie** przywraca status „w weryfikacji”.
+  Przycisk jest nieaktywny, gdy artykuł nie był jeszcze sprawdzany albo trwa właśnie weryfikacja.
+
+![Artykuł zatwierdzony](img/zatwierdzony.png)
 
 ## 7. Log agenta (audyt)
 Zakładka **Log agenta (audyt)** pokazuje krok po kroku, co robił asystent: jakie źródła wyszukał, które strony

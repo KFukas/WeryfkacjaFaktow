@@ -60,6 +60,18 @@ def main() -> int:
             page.screenshot(path=str(shots / "audyt.png"))
 
         page.get_by_role("tab", name="Tekst z adnotacjami").click()
+        # Zatwierdzenie artykułu przez redaktora i cofnięcie (stan końcowy jak przed testem).
+        approve = page.get_by_role("button", name="✔ Oznacz jako zweryfikowany")
+        undo = page.get_by_role("button", name="Cofnij zatwierdzenie")
+        if undo.count():
+            undo.click()
+        expect(approve).to_be_enabled(timeout=10_000)
+        approve.click()
+        expect(page.get_by_text("Status: zweryfikowany")).to_be_visible(timeout=10_000)
+        if shots:
+            page.screenshot(path=str(shots / "zatwierdzony.png"))
+        page.get_by_role("button", name="Cofnij zatwierdzenie").click()
+        expect(page.get_by_text("Status: w weryfikacji")).to_be_visible(timeout=10_000)
         page.get_by_role("button", name="Przełącz tryb jasny/ciemny").click()
         expect(page.locator("html.dark")).to_have_count(1)
         page.wait_for_timeout(600)  # koniec animacji kolorów

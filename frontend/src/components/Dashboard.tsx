@@ -1,13 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { api, type ArticleStatus, type Verdict } from "../api";
+import { api, type Verdict } from "../api";
 import { VERDICT_STYLE } from "../lib/verdict";
-
-const STATUS_LABEL: Record<ArticleStatus, string> = {
-  draft: "szkic",
-  in_review: "w weryfikacji",
-  verified: "zweryfikowany",
-};
+import { ArticleStatusControl } from "./ArticleStatusControl";
 
 function NewArticleForm({ onCreated }: { onCreated: (id: number) => void }) {
   const qc = useQueryClient();
@@ -65,7 +60,7 @@ export function Dashboard({ onOpen }: { onOpen: (id: number) => void }) {
                   {a.title}
                 </button>
                 <p className="text-xs text-slate-500">
-                  #{a.id} · {a.author || "—"} · {STATUS_LABEL[a.status]}
+                  #{a.id} · {a.author || "—"}
                 </p>
                 <p className="mt-1 flex flex-wrap gap-2 text-xs">
                   {(Object.entries(a.claim_counts) as [Verdict, number][]).map(([v, n]) => (
@@ -76,9 +71,14 @@ export function Dashboard({ onOpen }: { onOpen: (id: number) => void }) {
                   {Object.keys(a.claim_counts).length === 0 && <span className="text-slate-400">nie weryfikowano</span>}
                 </p>
               </div>
-              <button type="button" onClick={() => verify.mutate(a.id)} disabled={verify.isPending} className="rounded bg-sky-700 px-3 py-1.5 text-sm font-medium text-white hover:bg-sky-800 disabled:opacity-50">
-                Weryfikuj
-              </button>
+              <div className="flex flex-col items-end gap-2">
+                <button type="button" onClick={() => verify.mutate(a.id)} disabled={verify.isPending} className="rounded bg-sky-700 px-3 py-1.5 text-sm font-medium text-white hover:bg-sky-800 disabled:opacity-50">
+                  Weryfikuj
+                </button>
+              </div>
+              <div className="w-full border-t border-slate-100 pt-2 dark:border-slate-800">
+                <ArticleStatusControl articleId={a.id} status={a.status} hasClaims={Object.keys(a.claim_counts).length > 0} />
+              </div>
             </li>
           ))}
         </ul>

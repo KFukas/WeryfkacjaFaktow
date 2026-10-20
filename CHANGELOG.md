@@ -7,6 +7,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/), wersjonowanie:
   panelu, API + panel, otwarcie przeglądarki); automatyczny wybór wolnych portów (panel 8080, API 8010 — port 8000
   zostawiony innym projektom).
 - `ZATRZYMAJ.bat`: zatrzymuje wyłącznie procesy tego projektu.
+- Panel: znaczek statusu artykułu i przycisk „✔ Oznacz jako zweryfikowany” / „Cofnij zatwierdzenie” w widoku artykułu
+  **i** na liście artykułów; przycisk nieaktywny (z podanym powodem), gdy brak twierdzeń lub trwa weryfikacja.
+  Wcześniej przycisk znikał po zatwierdzeniu bez żadnej informacji i nie było go na liście.
 - `scripts/serve-build.ps1`: build produkcyjny panelu na :8080 bez Dockera.
 
 ## [1.0.0] — 2026-10-18

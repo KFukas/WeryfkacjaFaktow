@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useState } from "react";
 import { api } from "../api";
 import { AnnotatedArticle } from "./AnnotatedArticle";
+import { ArticleStatusControl } from "./ArticleStatusControl";
 import { AuditLog } from "./AuditLog";
 import { ClaimPanel } from "./ClaimPanel";
 import { RunProgress } from "./RunProgress";
@@ -21,13 +22,6 @@ export function ArticleView({ id, onBack }: { id: number; onBack: () => void }) 
   const reverify = useMutation({
     mutationFn: (claimId: number) => api.reverify(claimId),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["runs", id] }),
-  });
-  const setStatus = useMutation({
-    mutationFn: () => api.updateArticle(id, { status: "verified" }),
-    onSuccess: () => {
-      refresh();
-      qc.invalidateQueries({ queryKey: ["articles"] });
-    },
   });
 
   if (article.isLoading) return <p>Wczytywanie…</p>;
@@ -51,13 +45,9 @@ export function ArticleView({ id, onBack }: { id: number; onBack: () => void }) 
           <a href={api.reportUrl(id, "json")} target="_blank" rel="noreferrer" className="rounded border border-slate-300 px-3 py-1.5 hover:bg-slate-100 dark:border-slate-600 dark:hover:bg-slate-800">
             Raport .json
           </a>
-          {a.status !== "verified" && (
-            <button type="button" onClick={() => setStatus.mutate()} className="rounded border border-emerald-700 px-3 py-1.5 text-emerald-800 hover:bg-emerald-50 dark:text-emerald-300 dark:hover:bg-slate-800">
-              Oznacz jako zweryfikowany
-            </button>
-          )}
         </div>
       </div>
+      <ArticleStatusControl articleId={id} status={a.status} hasClaims={!!claims.data?.length} busy={!!active} />
       {active && <RunProgress key={active.id} run={active} onFinished={refresh} />}
       <div role="tablist" className="flex gap-4 border-b border-slate-200 dark:border-slate-700">
         {(["text", "audit"] as const).map((t) => (
